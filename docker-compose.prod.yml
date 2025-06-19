@@ -11,7 +11,10 @@ services:
 
   backend:
     build: ./comments-backend
-
+    ports:
+      - "8888:8888"
+    expose:
+      - "8888"
     env_file:
       - ./comments-backend/.env
     environment:
