@@ -1,18 +1,21 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { ApolloClient, InMemoryCache, ApolloProvider, split } from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache, split } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
-import { setContext } from "@apollo/client/link/context";
-import "./index.css";
+import { createClient } from "graphql-ws";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { NotificationProvider } from "./context/NotificationContext";
+import "./index.css";
+
+const HTTP_URI = import.meta.env.VITE_API_URL;
+const WS_URI = import.meta.env.VITE_WS_URL;
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://localhost:8888/graphql",
+    url: WS_URI,
     connectionParams: () => {
       const token = localStorage.getItem("token");
       return {
@@ -29,7 +32,7 @@ const wsLink = new GraphQLWsLink(
 );
 
 const uploadLink = createUploadLink({
-  uri: "http://localhost:8888/graphql",
+  uri: HTTP_URI,
   credentials: "include",
   headers: {
     "Apollo-Require-Preflight": "true",

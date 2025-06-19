@@ -4,21 +4,19 @@ services:
   frontend:
     build: ./comments-app
     ports:
-      - "5173:5173"
-    environment:
-      - VITE_API_URL=http://${DROPLET_IP}:8888/graphql
+      - "80:80"
+      
     networks:
       - app-network
 
   backend:
     build: ./comments-backend
-    ports:
-      - "8888:8888"
+
     env_file:
       - ./comments-backend/.env
     environment:
       - NODE_ENV=production
-      - CORS_ORIGIN=http://${DROPLET_IP}:5173
+      - CORS_ORIGIN=http://app-nbmuwibnvegpbjhc.pp.ua
     depends_on:
       - mongodb
       - redis
