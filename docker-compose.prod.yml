@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./comments-app
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://${DROPLET_IP}:8888/graphql
+    networks:
+      - app-network
+
+  backend:
+    build: ./comments-backend
+    ports:
+      - "8888:8888"
+    env_file:
+      - ./comments-backend/.env
+    environment:
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://${DROPLET_IP}:5173
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:6
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+
+volumes:
+  mongodb-data:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge

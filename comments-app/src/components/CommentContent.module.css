@@ -1,0 +1,56 @@
+/* file: ViewContent.module.css */
+.contentRenderer {
+  white-space: pre-line;
+}
+
+.contentRenderer p {
+  margin-bottom: 1em;
+  line-height: 1.5;
+}
+
+.contentRenderer p:last-child {
+  margin-bottom: 0;
+}
+
+.contentRenderer br {
+  display: block;
+  margin-bottom: 0.5em;
+  content: "";
+}
+
+/* Link styling */
+.contentRenderer a {
+  color: #2563eb;
+  /* Tailwind's blue-600 */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: all 0.2s ease;
+}
+
+.contentRenderer a:hover {
+  color: #1d4ed8;
+  /* Slightly darker blue */
+  text-decoration-thickness: 2px;
+}
+
+.contentRenderer a:focus {
+  outline: 2px solid #3b82f6;
+  /* Tailwind's blue-500 */
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Visited links */
+.contentRenderer a:visited {
+  color: #7c3aed;
+  /* Tailwind's violet-600 */
+}
+
+/* Code blocks */
+.contentRenderer code {
+  font-family: monospace;
+  background-color: #f3f4f6;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}

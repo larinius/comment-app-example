@@ -1,0 +1,10 @@
+**/node_modules/
+bin
+.vscode/
+.git/
+postgres-data/
+.env
+README.md
+.gitlab-ci.yml
+.yarn/releases/
+**/dist/
