@@ -10,6 +10,8 @@ import { createNotificationResolvers } from "../features/notification/Notificati
 import { createUserResolvers } from "../features/user/User.resolver";
 import { userTypeDefs } from "../features/user/types/User.type";
 import { createLoggerService } from "./loggerService";
+import { createCaptchaResolvers } from "@/features/captcha/Captcha.resolver";
+import { captchaTypeDefs } from "@/features/captcha/types/Captcha.type";
 
 export const createResolvers = (db: Db, pubsub: RedisPubSub) => {
   const logger = createLoggerService(db);
@@ -18,7 +20,8 @@ export const createResolvers = (db: Db, pubsub: RedisPubSub) => {
     createCommentResolvers(db, logger, pubsub),
     createAttachmentResolvers(db, logger),
     createNotificationResolvers(db, pubsub),
+    createCaptchaResolvers()
   ]);
 };
 
-export const typeDefs = mergeTypeDefs(["scalar Upload", userTypeDefs, commentTypeDefs, attachmentTypeDefs, notificationTypeDefs]);
+export const typeDefs = mergeTypeDefs([userTypeDefs, commentTypeDefs, attachmentTypeDefs, notificationTypeDefs, captchaTypeDefs]);

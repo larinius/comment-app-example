@@ -25,6 +25,7 @@
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
+    "canvas": "^3.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",
@@ -48,10 +49,11 @@
     "pino": "^9.4.0",
     "pino-http": "^10.0.0",
     "sharp": "^0.34.2",
+    "svg-captcha": "^1.4.0",
     "swagger-ui-express": "^5.0.0",
+    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "ws": "^8.18.2",
-    "ts-node": "^10.9.2"
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

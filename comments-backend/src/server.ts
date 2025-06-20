@@ -26,6 +26,7 @@ import { createApolloServer } from "./apolloServer";
 import { NotificationService } from "./features/notification/Notification.service";
 import { createResolvers, typeDefs } from "./service";
 import { createLoggerService } from "./service/loggerService";
+import { CaptchaService } from "./features/captcha/Captcha.service";
 
 declare module "express" {
   interface Request {
@@ -149,11 +150,12 @@ export async function createApp() {
     db,
     wsServer,
     notificationService: new NotificationService(db, pubsub),
+    captchaService: new CaptchaService(),
   };
 }
 
 export async function initializeServer() {
-  const { app, httpServer, logger, redis, pubsub, db, wsServer } = await createApp();
+  const { app, httpServer, logger, redis, pubsub, db, wsServer, captchaService } = await createApp();
 
   const resolvers = createResolvers(db, pubsub);
   const schema = makeExecutableSchema({
@@ -173,6 +175,7 @@ export async function initializeServer() {
         pubsub,
         db,
         notificationService: new NotificationService(db, pubsub),
+        captchaService
       }),
     }),
   );

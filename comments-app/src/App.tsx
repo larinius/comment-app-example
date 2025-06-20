@@ -8,8 +8,19 @@ import { useCommentSubmission } from "./hooks/useCommentSubmission";
 export default function App() {
   const { submitComment } = useCommentSubmission();
 
-  const handleSubmit = async (text: string, file?: File) => {
-    await submitComment(text, { file });
+  const handleSubmit = async (
+    text: string,
+    options?: {
+      file?: File;
+      captchaToken?: string;
+      captchaSolution?: string;
+    },
+  ) => {
+    await submitComment(text, {
+      file: options?.file,
+      captchaToken: options?.captchaToken,
+      captchaSolution: options?.captchaSolution,
+    });
   };
 
   return (

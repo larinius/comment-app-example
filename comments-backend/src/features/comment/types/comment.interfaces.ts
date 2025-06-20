@@ -4,4 +4,6 @@ export interface CreateCommentInput {
   content: string;
   parentId?: string;
   file?: FileUpload;
+  captchaToken: string;
+  captchaSolution: string;
 }

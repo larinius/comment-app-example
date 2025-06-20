@@ -15,6 +15,8 @@ export const useCommentSubmission = () => {
     options?: {
       parentId?: string;
       file?: File;
+      captchaToken?: string;
+      captchaSolution?: string;
       onSuccess?: () => void;
     },
   ) => {
@@ -23,6 +25,10 @@ export const useCommentSubmission = () => {
         content,
         ...(options?.parentId && { parentId: options.parentId }),
         ...(options?.file && { file: options.file }),
+        ...(options?.captchaToken && { 
+          captchaToken: options.captchaToken,
+          captchaSolution: options.captchaSolution 
+        }),
       };
 
       await createComment({

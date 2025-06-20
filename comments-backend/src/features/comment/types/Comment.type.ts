@@ -25,6 +25,8 @@ export const commentTypeDefs = `
     content: String!
     parentId: ID
     file: Upload
+    captchaToken: String
+    captchaSolution: String
   }
 
   type Mutation {

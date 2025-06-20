@@ -51,7 +51,6 @@ const CommentsView = () => {
   };
 
   const handleReplySubmitted = () => {
-    addToast("Reply posted successfully!", "success");
     refetch();
   };
 

@@ -20,6 +20,13 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = (message: string, type: ToastType, duration = 5000) => {
+
+    const isDuplicate = toasts.some((toast) => toast.message === message && toast.type === type);
+
+    if (isDuplicate) {
+      return;
+    }
+
     const id = Math.random().toString(36).substring(2, 9);
     const newToast = { id, message, type, duration };
 

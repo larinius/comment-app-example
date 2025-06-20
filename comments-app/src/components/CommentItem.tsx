@@ -1,10 +1,8 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import ModalImage from "react-modal-image";
-import { useNotifications } from "../context/NotificationContext";
-import { CREATE_COMMENT } from "../graphql/mutations";
 import { GET_COMMENTS_BY_IDS } from "../graphql/queries";
 import { useCommentSubmission } from "../hooks/useCommentSubmission";
 import type { CommentData } from "../types/types";
@@ -31,8 +29,6 @@ const CommentBlock: React.FC<CommentBlockProps> = ({
   const { submitComment } = useCommentSubmission();
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replies, setReplies] = useState<CommentData[]>([]);
-  const [createComment] = useMutation(CREATE_COMMENT);
-  const { addToast } = useNotifications();
   const isExpanded = forceExpand || expandedCommentIds.has(comment.id);
 
   const { loading, error, data } = useQuery(GET_COMMENTS_BY_IDS, {
@@ -46,20 +42,27 @@ const CommentBlock: React.FC<CommentBlockProps> = ({
     if (data?.commentsByIds) setReplies(data.commentsByIds);
   }, [data]);
 
-  const handleReplySubmit = async (content: string, file?: File) => {
-    if (!content.trim()) return;
+  const handleSubmit = async (
+    text: string,
+    options?: {
+      file?: File;
+      captchaToken?: string;
+      captchaSolution?: string;
+    },
+  ) => {
+    if (!text.trim()) return;
 
-    await submitComment(content, {
+    await submitComment(text, {
       parentId: comment.id,
-      file,
+      file: options?.file,
+      captchaToken: options?.captchaToken,
+      captchaSolution: options?.captchaSolution,
       onSuccess: () => {
         setShowReplyForm(false);
         onReplySubmitted?.();
       },
     });
   };
-
-  const handleToggleExpand = () => onToggleExpand(comment.id);
 
   return (
     <div className={`w-full ${depth > 0 ? "mt-0" : ""}`}>
@@ -162,7 +165,7 @@ const CommentBlock: React.FC<CommentBlockProps> = ({
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <SubmitForm onSubmit={handleReplySubmit} submitText="Post reply" />
+                <SubmitForm onSubmit={handleSubmit} />
               </motion.div>
             )}
           </div>

@@ -35,6 +35,7 @@ export async function createApolloServer(httpServer: Server, wsServer: WebSocket
 
   const server = new ApolloServer<GraphQLContext>({
     schema,
+    introspection: true,
     plugins: [
       process.env.NODE_ENV === "production"
         ? ApolloServerPluginLandingPageDisabled()

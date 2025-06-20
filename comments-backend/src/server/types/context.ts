@@ -1,3 +1,4 @@
+import { CaptchaService } from "@/features/captcha/Captcha.service";
 import type { NotificationService } from "@/features/notification/Notification.service";
 import type { RedisPubSub } from "graphql-redis-subscriptions";
 import type { Db } from "mongodb";
@@ -14,4 +15,5 @@ export interface GraphQLContext {
   pubsub: RedisPubSub;
   db: Db;
   notificationService: NotificationService;
+  captchaService: CaptchaService;
 }

@@ -1,8 +1,16 @@
 import { useState, useId } from "react";
 import { RichTextEditor } from "./RichTextEditor";
+import { Captcha } from "./Captcha";
 
 interface SubmitFormProps {
-  onSubmit: (text: string, file?: File) => Promise<void>;
+  onSubmit: (
+    text: string,
+    options?: {
+      file?: File;
+      captchaToken?: string;
+      captchaSolution?: string;
+    },
+  ) => Promise<void>;
   isSubmitting?: boolean;
   submitText?: string;
 }
@@ -12,6 +20,12 @@ const SubmitForm = ({ onSubmit, isSubmitting = false, submitText = "Post comment
   const [isValid, setIsValid] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const [fileName, setFileName] = useState<string | null>(null);
+  const [captchaData, setCaptchaData] = useState<{
+    token: string | null;
+    solution: string | null;
+  }>({ token: null, solution: null });
+  const [resetCaptcha, setResetCaptcha] = useState(false);
+
   const fileInputId = useId();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,21 +38,29 @@ const SubmitForm = ({ onSubmit, isSubmitting = false, submitText = "Post comment
   const clearFile = () => {
     setSelectedFile(undefined);
     setFileName(null);
-
     const fileInput = document.getElementById(fileInputId) as HTMLInputElement;
     if (fileInput) fileInput.value = "";
   };
 
+  const handleCaptchaVerified = (token: string, solution: string) => {
+    setCaptchaData({ token, solution });
+  };
+
   const handleSubmit = async () => {
-    if (!isValid) return;
+    if (!isValid || !captchaData.token || !captchaData.solution) return;
 
     try {
-      await onSubmit(content, selectedFile);
+      await onSubmit(content, {
+        file: selectedFile,
+        captchaToken: captchaData.token,
+        captchaSolution: captchaData.solution,
+      });
 
       setContent("");
       setSelectedFile(undefined);
       setFileName(null);
       setIsValid(false);
+      setResetCaptcha((prev) => !prev);
     } catch (error) {
       console.error("Error submitting comment:", error);
       throw error;
@@ -52,6 +74,15 @@ const SubmitForm = ({ onSubmit, isSubmitting = false, submitText = "Post comment
       </label>
 
       <RichTextEditor value={content} onChange={setContent} onValidate={setIsValid} />
+
+      <div className="mt-4">
+        <Captcha
+          onVerified={handleCaptchaVerified}
+          onError={() => setIsValid(false)}
+          onReset={() => setCaptchaData({ token: null, solution: null })}
+          key={resetCaptcha ? "reset" : "initial"}
+        />
+      </div>
 
       <div className="flex justify-between mt-4">
         <div className="flex items-center gap-2">
@@ -75,7 +106,7 @@ const SubmitForm = ({ onSubmit, isSubmitting = false, submitText = "Post comment
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isValid || !captchaData.token}
           className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isSubmitting ? (

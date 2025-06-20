@@ -11,6 +11,7 @@ import { NotificationService } from "../notification/Notification.service";
 import { UserService } from "../user/User.service";
 import { CommentService } from "./Comment.service";
 import type { CreateCommentInput } from "./types/comment.interfaces";
+import { CaptchaService } from "../captcha/Captcha.service";
 
 export const createCommentResolvers = (db: Db, logger: DbLogger, pubsub: RedisPubSub) => {
   const services: Services = {
@@ -18,6 +19,7 @@ export const createCommentResolvers = (db: Db, logger: DbLogger, pubsub: RedisPu
     userService: new UserService(db),
     attachmentService: new AttachmentService(logger),
     notificationService: new NotificationService(db, pubsub),
+    captchaService: new CaptchaService(),
   };
 
   const mapAttachments = async (attachments: Attachment[]) => {
@@ -124,6 +126,16 @@ export const createCommentResolvers = (db: Db, logger: DbLogger, pubsub: RedisPu
     Mutation: {
       createComment: async (_: unknown, { input }: { input: CreateCommentInput }, context: GraphQLContext) => {
         if (!context.user) throw new GraphQLError("Unauthorized");
+
+        if (!input.captchaToken || !input.captchaSolution) {
+          throw new GraphQLError("CAPTCHA verification required");
+        }
+
+        const isValidCaptcha = await context.captchaService.verifyCaptcha(input.captchaToken, input.captchaSolution);
+
+        if (!isValidCaptcha) {
+          throw new GraphQLError("Invalid CAPTCHA solution");
+        }
 
         try {
           let attachment: Attachment | undefined;
