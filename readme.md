@@ -43,3 +43,5 @@ docker-compose -f docker-compose.local.yml up
 - AWS S3 credentials configured in .env  
 
 **Note:** Make sure to create a `.env` file based on `envConfig.ts` before starting the project.
+
+![image](https://github.com/user-attachments/assets/b46aae14-2637-4860-ac8b-98762cabf818)
