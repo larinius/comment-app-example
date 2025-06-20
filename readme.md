@@ -44,4 +44,5 @@ docker-compose -f docker-compose.local.yml up
 
 **Note:** Make sure to create a `.env` file based on `envConfig.ts` before starting the project.
 
-![image](https://github.com/user-attachments/assets/b46aae14-2637-4860-ac8b-98762cabf818)
+![image](https://github.com/user-attachments/assets/7c21a747-874d-4cb3-b813-abfa322c2f90)
+
